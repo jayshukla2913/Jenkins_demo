@@ -2,7 +2,7 @@ pipeline {
     agent any
     stages{
         stage ("build"){
-            echo "This is build stage3"
+            echo "Triggering build for Jenkins hosted on AWS"
         }
     }
 }
