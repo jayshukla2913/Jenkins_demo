@@ -5,7 +5,7 @@ pipeline {
         DOCKERHUB_USER = 'jayshukla2913'
         IMAGE_NAME = 'flaskapp'
         //Docker Hub password stored as Jenkins secret
-        DOCKERHUB_PASSWORD = credentials('Jay@29.13')
+        DOCKERHUB_PASSWORD = credentials('Jenkins_MongoDB')
     }
 
     stages {
