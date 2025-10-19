@@ -27,7 +27,7 @@ pipeline {
                 sh '''
                     docker run -d --name test-container -p 5000:5000 $DOCKERHUB_USER/$IMAGE_NAME:latest
                     sleep 5
-                    curl -f http://54.205.13.69:5000 || (echo "Test failed" && exit 1)
+                    curl -f http://98.90.57.144:5000 || (echo "Test failed" && exit 1)
                     docker stop test-container && docker rm test-container
                 '''
             }
