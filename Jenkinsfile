@@ -25,7 +25,7 @@ pipeline {
             steps {
                 echo "Testing container startup..."
                 sh '''
-                    docker run -d --name flask-stark -p 500:5001 $DOCKERHUB_USER/$IMAGE_NAME:latest
+                    docker run -d --name flask-stark -p 5001:5001 $DOCKERHUB_USER/$IMAGE_NAME:latest
                     sleep 5
                     curl -f http://98.90.57.144:5001 || (echo "Test failed" && exit 1)
                     docker stop test-container && docker rm test-container
