@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_USER = 'your_dockerhub_username'
+        DOCKERHUB_USER = 'jayshukla2913'
         IMAGE_NAME = 'flaskapp'
         # Docker Hub password stored as Jenkins secret
-        DOCKERHUB_PASSWORD = credentials('dockerhub-password-id')
+        DOCKERHUB_PASSWORD = credentials('Jay@29.13')
     }
 
     stages {
