@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKERHUB_USER = 'jayshukla2913'
         IMAGE_NAME = 'flaskapp'
-        # Docker Hub password stored as Jenkins secret
+        //Docker Hub password stored as Jenkins secret
         DOCKERHUB_PASSWORD = credentials('Jay@29.13')
     }
 
