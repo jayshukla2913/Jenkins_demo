@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKERHUB_USER = 'jayshukla2913'
-        DOCKERHUB_PASSWORD = credentials('Jenkins_MongoDB')   // Credential ID in Jenkins
+        DOCKERHUB_PASSWORD = 'dckr_pat_f_8R8RnU5gezPvHVJQ0dcSWFqjY'   // Credential ID in Jenkins
         IMAGE_NAME = 'flask-mongo-app'
     }
 
