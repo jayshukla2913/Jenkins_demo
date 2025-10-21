@@ -2,37 +2,42 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_USER = 'jayshukla2913'
-        IMAGE_NAME = 'flaskapp'
-        //Docker Hub password stored as Jenkins secret
-        DOCKERHUB_PASSWORD = credentials('Jenkins_MongoDB')
+        DOCKERHUB_USER = 'your_dockerhub_username'
+        DOCKERHUB_PASSWORD = credentials('Jenkins_MongoDB')   // Credential ID in Jenkins
+        IMAGE_NAME = 'flask-mongo-app'
     }
 
     stages {
-
-        stage('Build Docker Image') {
+        stage('Checkout') {
             steps {
-                echo "Building Docker image..."
+                echo "Fetching source code..."
+                checkout scm
+            }
+        }
+
+        stage('Build & Push Docker Image') {
+            steps {
+                echo "Building and pushing Docker image..."
                 sh '''
+                    echo "---- DEBUG START ----"
+                    echo "Docker username: $DOCKERHUB_USER"
+                    echo "Password length: ${#DOCKERHUB_PASSWORD}"
+                    echo "---- DEBUG END ----"
+
                     echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USER" --password-stdin
                     docker build -t $DOCKERHUB_USER/$IMAGE_NAME:latest .
                     docker push $DOCKERHUB_USER/$IMAGE_NAME:latest
-            '''
+                '''
             }
         }
 
         stage('Deploy with Docker Compose') {
             steps {
-                echo "Deploying Flask app with DB using Docker Compose..."
+                echo "Deploying app using Docker Compose..."
                 sh '''
-                    # Stop and remove old containers if any
-                    docker-compose down || true
-
-                    # Pull latest image from Docker Hub
-                    docker-compose pull
-
-                    # Start containers in detached mode
-                    docker-compose up -d
+                    docker compose down || true
+                    docker compose pull
+                    docker compose up -d
                 '''
             }
         }
@@ -40,10 +45,10 @@ pipeline {
 
     post {
         success {
-            echo "Pipeline completed successfully! Access your app at http://<EC2_PUBLIC_IP>:5000"
+            echo "✅ Deployment successful!"
         }
         failure {
-            echo "Pipeline failed. Check Jenkins console for details."
+            echo "❌ Deployment failed. Check the logs for errors."
         }
     }
 }
