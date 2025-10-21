@@ -14,10 +14,10 @@ pipeline {
             steps {
                 echo "Building Docker image..."
                 sh '''
+                    echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USER" --password-stdin
                     docker build -t $DOCKERHUB_USER/$IMAGE_NAME:latest .
-                    echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USER --password-stdin
                     docker push $DOCKERHUB_USER/$IMAGE_NAME:latest
-                '''
+            '''
             }
         }
 
