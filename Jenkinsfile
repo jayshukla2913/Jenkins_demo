@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_USER = 'your-dockerhub-username'
+        DOCKERHUB_USER = 'jayshukla2913'
         IMAGE_NAME = 'flask-mongo-app'
     }
 
