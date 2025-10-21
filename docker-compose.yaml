@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: flask-db
+    restart: always
+    environment:
+      POSTGRES_USER: flaskuser
+      POSTGRES_PASSWORD: flaskpass
+      POSTGRES_DB: flaskdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  flask-app:
+    image: ${DOCKERHUB_USER}/${IMAGE_NAME}:latest
+    container_name: flask-app
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - DATABASE_URL=postgresql://flaskuser:flaskpass@db:5432/flaskdb
+    depends_on:
+      - db
+
+volumes:
+  db-data:
