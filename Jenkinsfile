@@ -2,12 +2,12 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_USER = 'jayshukla2913'
-        DOCKERHUB_PASSWORD = 'dckr_pat_f_8R8RnU5gezPvHVJQ0dcSWFqjY'   // Credential ID in Jenkins
+        DOCKERHUB_USER = 'your-dockerhub-username'
         IMAGE_NAME = 'flask-mongo-app'
     }
 
     stages {
+
         stage('Checkout') {
             steps {
                 echo "Fetching source code..."
@@ -15,30 +15,29 @@ pipeline {
             }
         }
 
-        stage('Build & Push Docker Image') {
+        stage('Docker Login & Build') {
             steps {
-                echo "Building and pushing Docker image..."
-                sh '''
-                    echo "---- DEBUG START ----"
-                    echo "Docker username: $DOCKERHUB_USER"
-                    echo "Password length: ${#DOCKERHUB_PASSWORD}"
-                    echo "---- DEBUG END ----"
-
-                    echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USER" --password-stdin
-                    docker build -t $DOCKERHUB_USER/$IMAGE_NAME:latest .
-                    docker push $DOCKERHUB_USER/$IMAGE_NAME:latest
-                '''
+                echo "Logging into Docker Hub and building the image..."
+                withCredentials([usernamePassword(credentialsId: 'Jenkins_MongoDB', 
+                                                 usernameVariable: 'USER', 
+                                                 passwordVariable: 'PASS')]) {
+                    sh """
+                        echo \$PASS | docker login -u \$USER --password-stdin
+                        docker build -t \$USER/\$IMAGE_NAME:latest .
+                        docker push \$USER/\$IMAGE_NAME:latest
+                    """
+                }
             }
         }
 
         stage('Deploy with Docker Compose') {
             steps {
-                echo "Deploying app using Docker Compose..."
-                sh '''
+                echo "Deploying Flask + MongoDB using Docker Compose..."
+                sh """
                     docker compose down || true
                     docker compose pull
                     docker compose up -d
-                '''
+                """
             }
         }
     }
@@ -48,7 +47,7 @@ pipeline {
             echo "✅ Deployment successful!"
         }
         failure {
-            echo "❌ Deployment failed. Check the logs for errors."
+            echo "❌ Deployment failed. Check logs for details."
         }
     }
 }
