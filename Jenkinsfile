@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_USER = 'your_dockerhub_username'
+        DOCKERHUB_USER = 'jayshukla2913'
         DOCKERHUB_PASSWORD = credentials('Jenkins_MongoDB')   // Credential ID in Jenkins
         IMAGE_NAME = 'flask-mongo-app'
     }
