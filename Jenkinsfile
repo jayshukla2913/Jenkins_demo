@@ -27,10 +27,10 @@ pipeline {
                 withSonarQubeEnv(SONARQUBE_SERVER_NAME) {
                     sh """
                         pysonar-scanner \
-                            -Dsonar.projectKey=Flask_MongoDB_App \ 
-                            -Dsonar.sources=. \
-                            -Dsonar.host.url=http://98.90.57.144:9000/ \
-                            -Dsonar.login=\$SONARQUBE_TOKEN
+                            -Dsonar.projectKey=Flask_MongoDB_App 
+                            -Dsonar.sources=.
+                            -Dsonar.host.url=http://98.90.57.144:9000
+                            -Dsonar.login=$SONARQUBE_TOKEN
                     """
                 }
             }
