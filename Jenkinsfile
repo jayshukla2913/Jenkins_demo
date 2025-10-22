@@ -17,25 +17,23 @@ pipeline {
             }
         }
 
-        stage('SonarQube Scan') {
-            steps {
-                echo "🔍 Running SonarQube scan..."
-                script {
-                    // Get the scanner tool path from Jenkins
-                    def scannerHome = tool 'Jenkins_Scanner'
-                    withSonarQubeEnv("${SONARQUBE_SERVER_NAME}") {
-                        // Use single quotes to protect secret variables
-                        sh '''
-                            ${scannerHome}/bin/sonar-scanner \
-                                -Dsonar.projectKey=Flask_MongoDB_App \
-                                -Dsonar.sources=. \
-                                -Dsonar.host.url=http://98.90.57.144:9000 \
-                                -Dsonar.login=$SONARQUBE_TOKEN
-                        '''
-                    }
-                }
+       stage('SonarQube Scan') {
+    steps {
+        echo "🔍 Running SonarQube scan..."
+        script {
+            def scannerHome = tool name: 'Jenkins_Scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+            withSonarQubeEnv("${SONARQUBE_SERVER_NAME}") {
+                sh """
+                    ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=Flask_MongoDB_App \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=http://98.90.57.144:9000 \
+                        -Dsonar.login=${SONARQUBE_TOKEN}
+                """
             }
         }
+    }
+}
 
         stage('Quality Gate Check') {
             steps {
