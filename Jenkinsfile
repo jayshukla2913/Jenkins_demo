@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        sonarScanner 'Jenkins_Scanner'   // Name as defined under Manage Jenkins → Global Tool Configuration
-    }
-
     environment {
         DOCKERHUB_USER = 'jayshukla2913'
         IMAGE_NAME = 'flask-mongo-app'
