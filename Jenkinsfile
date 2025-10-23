@@ -6,6 +6,8 @@ pipeline {
         IMAGE_NAME = 'flask-mongo-app'
         SONARQUBE_SERVER_NAME = 'Jenkins_SonarQube'
         SONARQUBE_TOKEN = credentials('SonarQube_creds') // Jenkins credential
+        NEXUS_PASSWORD = credentials('nexus_credentials') // Jenkins credential
+        NEXUS_URL = 'http://98.90.57.144:8081/
     }
 
     stages {
@@ -61,6 +63,38 @@ pipeline {
                         docker push \$USER/\$IMAGE_NAME:latest
                     """
                 }
+            }
+        }
+
+        stage('Docker Image Save') {
+            steps {
+                echo "💾 Saving Docker image as a tar file..."
+                sh """
+                    docker save -o ${IMAGE_NAME}.tar ${DOCKERHUB_USER}/${IMAGE_NAME}:latest
+                """
+            }
+        }
+
+        stage('Nexus Upload') {
+            steps {
+                echo "📦 Uploading Docker image to Nexus Repository..."
+                withCredentials([usernamePassword(credentialsId: 'nexus_credentials', 
+                                                 usernameVariable: 'NEXUS_USER', 
+                                                 passwordVariable: 'NEXUS_PASS')]) {
+                    script {
+                                nexusArtifactUploader (
+                                    nexusVersion: 'NEXUS3',
+                                    nexusUrl: 'NEXUS_URL',
+                                    groupId: 'com.jenkins.demo',
+                                    repositoryId: 'docker-repo',
+                                    artifacts: [[artifactId: 'flask-mongo-app', 
+                                                  classifier: '', 
+                                                  file: '${IMAGE_NAME}.tar', 
+                                                  type: 'tar']], 
+                                    credentialsId: 'nexus_credentials', 
+                                       )
+                            }
+                        }
             }
         }
 
