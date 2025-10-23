@@ -7,7 +7,7 @@ pipeline {
         SONARQUBE_SERVER_NAME = 'Jenkins_SonarQube'
         SONARQUBE_TOKEN = credentials('SonarQube_creds') // Jenkins credential
         NEXUS_PASSWORD = credentials('nexus_credentials') // Jenkins credential
-        NEXUS_URL = 'http://98.90.57.144:8081/
+        NEXUS_URL = 'http://98.90.57.144:8081/'
     }
 
     stages {
