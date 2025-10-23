@@ -89,7 +89,7 @@ pipeline {
                                     repository: 'docker-repo',
                                     artifacts: [[artifactId: 'flask-mongo-app', 
                                                   classifier: '', 
-                                                  file: '${IMAGE_NAME}.tar', 
+                                                  file: '/var/lib/jenkins/workspace/Jenkins_Flask_App/${IMAGE_NAME}.tar', 
                                                   type: 'tar']], 
                                     credentialsId: 'nexus_credentials', 
                                        )
