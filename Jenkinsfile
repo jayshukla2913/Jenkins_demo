@@ -86,7 +86,7 @@ pipeline {
                                     nexusVersion: 'NEXUS3',
                                     nexusUrl: 'NEXUS_URL',
                                     groupId: 'com.jenkins.demo',
-                                    repositoryId: 'docker-repo',
+                                    repository: 'docker-repo',
                                     artifacts: [[artifactId: 'flask-mongo-app', 
                                                   classifier: '', 
                                                   file: '${IMAGE_NAME}.tar', 
