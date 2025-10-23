@@ -110,7 +110,7 @@ pipeline {
                                                  passwordVariable: 'NEXUS_PASS')]) {
                     script{
                         // Push the Docker image to Nexus
-                        docker.withRegistry("http://98.90.57.144:8081", 'Jenkins_MongoDB') {
+                        docker.withRegistry("http://98.90.57.144:8082", 'Jenkins_MongoDB') {
                         docker.image("${NEXUS_URL2}/${IMAGE_NAME}:${env.BUILD_ID}").push()
                         }
                     }
