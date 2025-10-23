@@ -7,7 +7,7 @@ pipeline {
         SONARQUBE_SERVER_NAME = 'Jenkins_SonarQube'
         SONARQUBE_TOKEN = credentials('SonarQube_creds') // Jenkins credential
         NEXUS_PASSWORD = credentials('nexus_credentials') // Jenkins credential
-        NEXUS_URL = '98.90.57.144:8081/'
+        NEXUS_URL = '98.90.57.144:8081/repository/docker-repo/'
     }
 
     stages {
@@ -87,11 +87,13 @@ pipeline {
                                     protocol: 'http',
                                     nexusUrl: "${NEXUS_URL}",
                                     groupId: 'com.jenkins.demo',
+                                    version: '1.0.0',
                                     repository: 'docker-repo',
                                     artifacts: [[artifactId: 'flask-mongo-app', 
                                                   classifier: '', 
                                                   file: "${WORKSPACE}/${IMAGE_NAME}.tar", 
-                                                  type: 'tar']], 
+                                                  type: 'tar',
+                                                  version: '1.0.0']], 
                                     credentialsId: 'nexus_credentials'
                                        )
                             }
