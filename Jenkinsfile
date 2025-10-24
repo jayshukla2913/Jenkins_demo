@@ -17,6 +17,9 @@ pipeline {
     stages {
 
         stage('Checkout') {
+            when{
+                expression { params.BRANCH_NAME == 'main' }
+            }
             steps {
                 echo "📥 Fetching source code..."
                 checkout scm
