@@ -39,23 +39,27 @@ pipeline {
         }
 
         stage('Python Test & Coverage') {
-            steps {
-                echo "🐍 Installing Python dependencies and running tests..."
-                sh '''
-                    #Logging as root user
-                    sudo bash
-                    
-                    # Upgrade pip
-                    apt install python3-pip -y
-                    
-                    # Install Python dependencies
-                    python3 -m pip install flask sqlalchemy pytest pytest-cov
+    steps {
+        echo "🐍 Installing Python dependencies in venv and running tests..."
+        sh '''
+            # Check if venv exists, create if missing
+            if [ ! -d "venv" ]; then
+                python3 -m venv venv
+            fi
 
-                    # Run tests with coverage
-                    pytest --maxfail=1 --disable-warnings --cov=. --cov-report=xml
-                '''
-            }
+            # Activate virtual environment
+            . venv/bin/activate
+
+            # Upgrade pip and install dependencies
+            pip install --upgrade pip
+            pip install flask sqlalchemy pytest pytest-cov
+
+            # Run tests and generate coverage report
+            pytest --maxfail=1 --disable-warnings --cov=. --cov-report=xml
+        '''
         }
+    }
+
 
         stage('SonarQube Scan') {
             steps {
