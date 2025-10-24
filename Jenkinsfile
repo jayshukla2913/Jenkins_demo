@@ -43,8 +43,8 @@ pipeline {
                 echo "🐍 Installing Python dependencies and running tests..."
                 sh '''
                     # Upgrade pip
-                    python3 -m pip install --upgrade pip
-
+                    sudo apt install python3-pip -y
+                    
                     # Install Python dependencies
                     python3 -m pip install flask sqlalchemy pytest pytest-cov
 
