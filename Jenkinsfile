@@ -22,10 +22,12 @@ pipeline {
                 expression { !(params.BRANCH_NAME == 'main' && params.VERSION == '1.1') }
             }
             steps {
+                script {
                 echo "Checking failed due to branch or version mismatch"
                 currentBuild.result = 'ABORTED'
                 error("Aborting the pipeline due to branch or version mismatch.")
                 }
+            }
             
         }
 
