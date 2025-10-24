@@ -10,14 +10,14 @@ pipeline {
         NEXUS_URL = '98.90.57.144:8081/repository/docker-repo/'
         NEXUS_URL2 = '98.90.57.144:8081/repository/docker-image-repo/'
     }
-    parameters {
+    /*parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Git branch to build from')
         choice(name: 'VERSION', choices: ['1.0', '1.1', '1.2'], description: 'Select the version to deploy')
-    }
+    }*/
 
     stages {
 
-        stage('Abort Pipeline'){
+        /*stage('Abort Pipeline'){
             when {
                 expression { (params.BRANCH_NAME != 'main' && params.VERSION != '1.1') }
             }
@@ -29,15 +29,38 @@ pipeline {
                 }
             }
             
-        }
+        }*/
 
         stage('Checkout') {
-            when{
+            /*when{
                 expression { params.BRANCH_NAME == 'main' && params.VERSION == '1.1'}
-            }
+            }*/
             steps {
                 echo "📥 Fetching source code..."
                 checkout scm
+            }
+        }
+
+        stage('Maven Build') {
+            steps {
+                echo "🔨 Building with Maven..."
+                script {
+                    // Run Maven commands
+                    sh """
+                        mvn clean install -DskipTests
+                    """
+                }
+            }
+        }
+
+        stage('Maven Test') {
+            steps {
+                echo "🧪 Running Maven tests..."
+                script {
+                    sh """
+                        mvn test
+                    """
+                }
             }
         }
 
