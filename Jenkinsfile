@@ -25,7 +25,8 @@ pipeline {
                 echo "📥 Fetching source code..."
                 checkout scm
             }
-            else {
+            when {
+                expression { !(params.BRANCH_NAME == 'main' && params.VERSION == '1.1') }
                 echo "Checking failed due to branch or version mismatch"
                 pipeline.result = 'ABORTED'
                 error("Aborting the pipeline due to branch or version mismatch.")
