@@ -40,17 +40,13 @@ pipeline {
 
         stage('Python Test & Coverage') {
             steps {
-                echo "🐍 Setting up Python environment and running tests..."
+                echo "🐍 Installing Python dependencies and running tests..."
                 sh '''
-                    # Create virtual environment
-                    python3 -m venv venv
-                    source venv/bin/activate
-
                     # Upgrade pip
-                    pip install --upgrade pip
+                    python3 -m pip install --upgrade pip
 
                     # Install Python dependencies
-                    pip install flask sqlalchemy pytest pytest-cov
+                    python3 -m pip install flask sqlalchemy pytest pytest-cov
 
                     # Run tests with coverage
                     pytest --maxfail=1 --disable-warnings --cov=. --cov-report=xml
@@ -65,7 +61,6 @@ pipeline {
                     def scannerHome = tool name: 'Jenkins_Scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
                     withSonarQubeEnv("${SONARQUBE_SERVER_NAME}") {
                         sh """
-                            source venv/bin/activate
                             ${scannerHome}/bin/sonar-scanner \
                                 -Dsonar.projectKey=Flask_MongoDB_App \
                                 -Dsonar.sources=. \
