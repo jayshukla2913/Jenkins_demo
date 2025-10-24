@@ -19,7 +19,7 @@ pipeline {
 
         stage('Abort Pipeline'){
             when {
-                expression { !(params.BRANCH_NAME == 'main' && params.VERSION == '1.1') }
+                expression { (params.BRANCH_NAME != 'main' && params.VERSION != '1.1') }
             }
             steps {
                 echo "Checking failed due to branch or version mismatch"
