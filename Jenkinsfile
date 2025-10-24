@@ -1,8 +1,8 @@
 pipeline {
     agent any
-    
+
     tools {
-        maven 'Maven'  // Name as defined under Manage Jenkins → Global Tool Configuration
+        maven 'Maven'  // Make sure Maven is installed and configured in Jenkins
     }
 
     environment {
@@ -12,7 +12,6 @@ pipeline {
         SONARQUBE_TOKEN = credentials('SonarQube_creds') // Jenkins credential
         NEXUS_PASSWORD = credentials('nexus_credentials') // Jenkins credential
         NEXUS_URL = '98.90.57.144:8081/repository/docker-repo/'
-        NEXUS_URL2 = '98.90.57.144:8081/repository/docker-image-repo/'
     }
 
     stages {
@@ -24,31 +23,14 @@ pipeline {
             }
         }
 
-        stage('Maven Build') {
-            steps {
-                echo "🔨 Building with Maven..."
-                sh 'mvn clean install'
-            }
-        }
-
-        stage('Demo Maven Test') {
-            steps {
-                echo "🧪 Running Maven tests..."
-                sh 'mvn test'
-            }
-        }
-
         stage('Python Test & Coverage') {
             steps {
-                echo "🐍 Installing Python dependencies and running tests..."
+                echo "🐍 Installing Python dependencies in venv and running tests..."
                 sh '''
-                    # Upgrade pip
-                    apt install python3-pip -y
-                    
-                    # Install Python dependencies
-                    python3 -m pip install flask sqlalchemy pytest pytest-cov
-
-                    # Run tests with coverage
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip install --upgrade pip
+                    pip install flask sqlalchemy pytest pytest-cov
                     pytest --maxfail=1 --disable-warnings --cov=. --cov-report=xml
                 '''
             }
@@ -58,29 +40,17 @@ pipeline {
             steps {
                 echo "🔍 Running SonarQube scan..."
                 script {
+                    // Use sonar-scanner installation defined in Jenkins
                     def scannerHome = tool name: 'Jenkins_Scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
                     withSonarQubeEnv("${SONARQUBE_SERVER_NAME}") {
                         sh """
                             ${scannerHome}/bin/sonar-scanner \
                                 -Dsonar.projectKey=Flask_MongoDB_App \
                                 -Dsonar.sources=. \
-                                -Dsonar.python.coverage.reportPaths=coverage.xml \
                                 -Dsonar.host.url=http://98.90.57.144:9000 \
-                                -Dsonar.login=${SONARQUBE_TOKEN}
+                                -Dsonar.login=${SONARQUBE_TOKEN} \
+                                -Dsonar.python.coverage.reportPaths=coverage.xml
                         """
-                    }
-                }
-            }
-        }
-
-        stage('Quality Gate Check') {
-            steps {
-                echo '⏳ Quality Gate check (optional, currently not aborting)...'
-                script {
-                    timeout(time: 15, unit: 'MINUTES') {
-                        // If you want to enforce Quality Gate, uncomment below
-                        // def qg = waitForQualityGate abortPipeline: true
-                        echo "Quality Gate step completed (pipeline continues)"
                     }
                 }
             }
@@ -101,42 +71,7 @@ pipeline {
             }
         }
 
-        stage('Docker Image Save') {
-            steps {
-                echo "💾 Saving Docker image as tar file..."
-                sh '''
-                    docker save -o ${IMAGE_NAME}.tar ${DOCKERHUB_USER}/${IMAGE_NAME}:latest
-                '''
-            }
-        }
-
-        stage('Nexus Raw Upload') {
-            steps {
-                echo "📦 Uploading Docker image tar file to Nexus..."
-                withCredentials([usernamePassword(credentialsId: 'nexus_credentials', 
-                                                 usernameVariable: 'NEXUS_USER', 
-                                                 passwordVariable: 'NEXUS_PASS')]) {
-                    script {
-                        nexusArtifactUploader (
-                            nexusVersion: 'NEXUS3',
-                            protocol: 'http',
-                            nexusUrl: "${NEXUS_URL}",
-                            groupId: 'com.jenkins.demo',
-                            version: '1.0.0',
-                            repository: 'docker-repo',
-                            artifacts: [[artifactId: 'flask-mongo-app', 
-                                         classifier: '', 
-                                         file: "${WORKSPACE}/${IMAGE_NAME}.tar", 
-                                         type: 'tar',
-                                         version: '1.0.0']], 
-                            credentialsId: 'nexus_credentials'
-                        )
-                    }
-                }
-            }
-        }
-
-        stage('Deploy with Docker Compose') {
+        stage('Docker Compose Deploy') {
             steps {
                 echo "🚀 Deploying Flask + PostgreSQL using Docker Compose..."
                 sh '''
