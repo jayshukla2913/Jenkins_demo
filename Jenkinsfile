@@ -10,6 +10,9 @@ pipeline {
         NEXUS_URL = '98.90.57.144:8081/repository/docker-repo/'
         NEXUS_URL2 = '98.90.57.144:8081/repository/docker-image-repo/'
     }
+    parameters {
+        string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Git branch to build from')
+    }
 
     stages {
 
@@ -46,7 +49,7 @@ pipeline {
                     // Timeout block kept for future use
                     timeout(time: 15, unit: 'MINUTES') {
                          def qg = waitForQualityGate abortPipeline: true
-                         echo "Pipeline will continue without Quality Gate"
+                         echo "Pipeline will continue with Quality Gate response"
                     }
                 }
             }
@@ -99,22 +102,6 @@ pipeline {
                                        )
                             }
                         }
-            }
-        }
-
-        stage('Nexus Docker Image Upload') {
-            steps {
-                echo "📦 Uploading Docker image to Nexus Docker Repository..."
-                withCredentials([usernamePassword(credentialsId: 'nexus_credentials', 
-                                                 usernameVariable: 'NEXUS_USER', 
-                                                 passwordVariable: 'NEXUS_PASS')]) {
-                    script{
-                        // Push the Docker image to Nexus
-                        docker.withRegistry("http://98.90.57.144:8082", 'Jenkins_MongoDB') {
-                        docker.image("${NEXUS_URL2}/${IMAGE_NAME}:${env.BUILD_ID}").push()
-                        }
-                    }
-                }
             }
         }
 
