@@ -20,12 +20,13 @@ pipeline {
         stage('Abort Pipeline'){
             when {
                 expression { !(params.BRANCH_NAME == 'main' && params.VERSION == '1.1') }
-                steps {
+            }
+            steps {
                 echo "Checking failed due to branch or version mismatch"
                 currentBuild.result = 'ABORTED'
                 error("Aborting the pipeline due to branch or version mismatch.")
                 }
-            }
+            
         }
 
         stage('Checkout') {
