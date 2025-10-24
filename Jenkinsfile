@@ -12,13 +12,14 @@ pipeline {
     }
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Git branch to build from')
+        choice(name: 'VERSION', choices: ['1.0', '1.1', '1.2'], description: 'Select the version to deploy')
     }
 
     stages {
 
         stage('Checkout') {
             when{
-                expression { params.BRANCH_NAME == 'main' }
+                expression { params.BRANCH_NAME == 'main' && params.VERSION == '1.0'}
             }
             steps {
                 echo "📥 Fetching source code..."
