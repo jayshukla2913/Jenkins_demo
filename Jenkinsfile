@@ -24,6 +24,7 @@ pipeline {
                 echo "Checking failed due to branch or version mismatch"
                 pipeline.result = 'ABORTED'
                 error("Aborting the pipeline due to branch or version mismatch.")
+                }
             }
         }
 
@@ -35,6 +36,7 @@ pipeline {
                 echo "📥 Fetching source code..."
                 checkout scm
             }
+        }
 
         stage('SonarQube Scan') {
             steps {
