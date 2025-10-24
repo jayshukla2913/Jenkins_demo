@@ -42,23 +42,17 @@ pipeline {
     steps {
         echo "🐍 Installing Python dependencies in venv and running tests..."
         sh '''
-            # Check if venv exists, create if missing
             if [ ! -d "venv" ]; then
-                python3 -m venv venv
+                python3 -m venv venv || { echo "Failed to create venv"; exit 1; }
             fi
-
-            # Activate virtual environment
             . venv/bin/activate
-
-            # Upgrade pip and install dependencies
             pip install --upgrade pip
             pip install flask sqlalchemy pytest pytest-cov
-
-            # Run tests and generate coverage report
             pytest --maxfail=1 --disable-warnings --cov=. --cov-report=xml
         '''
         }
     }
+
 
 
         stage('SonarQube Scan') {
