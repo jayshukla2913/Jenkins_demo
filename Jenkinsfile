@@ -25,8 +25,8 @@ pipeline {
                 script {
                 echo "Checking failed due to branch or version mismatch"
                 currentBuild.result = 'ABORTED'
-                abortPipeline: true
                 error("Aborting the pipeline due to branch or version mismatch.")
+                abortPipeline: true
                 }
             }
             
