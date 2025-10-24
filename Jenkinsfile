@@ -19,7 +19,7 @@ pipeline {
 
         stage('Checkout') {
             when{
-                expression { params.BRANCH_NAME == 'main' && params.VERSION == '1.0'}
+                expression { params.BRANCH_NAME == 'main' && params.VERSION == '1.1'}
             }
             steps {
                 echo "📥 Fetching source code..."
