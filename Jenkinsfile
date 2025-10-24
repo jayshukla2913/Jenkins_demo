@@ -18,7 +18,7 @@ pipeline {
 
         stage('Checkout') {
             when{
-                expression { params.BRANCH_NAME == 'main' }
+                expression { params.BRANCH_NAME == 'Jenkins' }
             }
             steps {
                 echo "📥 Fetching source code..."
