@@ -17,6 +17,16 @@ pipeline {
 
     stages {
 
+        stage('Abort Pipeline'){
+            when {
+                expression { !(params.BRANCH_NAME == 'main' && params.VERSION == '1.1') }
+                steps {
+                echo "Checking failed due to branch or version mismatch"
+                pipeline.result = 'ABORTED'
+                error("Aborting the pipeline due to branch or version mismatch.")
+            }
+        }
+
         stage('Checkout') {
             when{
                 expression { params.BRANCH_NAME == 'main' && params.VERSION == '1.1'}
@@ -25,13 +35,6 @@ pipeline {
                 echo "📥 Fetching source code..."
                 checkout scm
             }
-            when {
-                expression { !(params.BRANCH_NAME == 'main' && params.VERSION == '1.1') }
-                echo "Checking failed due to branch or version mismatch"
-                pipeline.result = 'ABORTED'
-                error("Aborting the pipeline due to branch or version mismatch.")
-            }
-        }
 
         stage('SonarQube Scan') {
             steps {
