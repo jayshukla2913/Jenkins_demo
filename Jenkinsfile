@@ -50,7 +50,7 @@ pipeline {
                 echo "🔨 Building with Maven..."
                 script {
                     // Run Maven commands
-                        sh 'mvn clean install -DskipTests'
+                        sh 'mvn clean install'
                     } 
                 }
             }
