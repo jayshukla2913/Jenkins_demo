@@ -55,9 +55,9 @@ pipeline {
                 }
             }
 
-        stage('Maven Test') {
+        stage('Demo Maven Test') {
             steps {
-                echo "🧪 Running Maven tests..."
+                echo "🧪 Running Demo Maven tests..."
                 script {
                     sh """
                         mvn test
