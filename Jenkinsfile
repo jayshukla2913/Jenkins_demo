@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = "flask-app"                    // Docker image name
-        DOCKERHUB_CREDENTIALS = "dockerhub-creds"  // Jenkins Docker Hub credential ID
+        DOCKERHUB_CREDENTIALS = "Docker_Master_Credentials"  // Jenkins Docker Hub credential ID
         CONTAINER_NAME = "flask-app-container"
     }
 
