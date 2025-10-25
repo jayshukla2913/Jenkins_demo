@@ -73,7 +73,7 @@ pipeline {
                               -Dsonar.projectKey=flask-app \
                               -Dsonar.sources=. \
                               -Dsonar.python.coverage.reportPaths=coverage.xml \
-                              -Dsonar.host.url=http://98.90.57.144:9000 \
+                              -Dsonar.host.url=http://http://13.219.17.222:9000 \
                               -Dsonar.login=${SONAR_TOKEN}"
                         """
                     }
