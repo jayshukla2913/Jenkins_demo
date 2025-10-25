@@ -5,15 +5,23 @@ from dotenv import load_dotenv
 
 app = Flask(__name__)
 
-# Load environment variables from .env in project root
+# Load .env file from project root
 load_dotenv()
 
-# Get database URL from environment variable
-database_url = os.environ.get("DATABASE_URL")
-if not database_url:
-    raise Exception("DATABASE_URL not set in .env or environment")
+# Construct DATABASE_URL from individual env vars
+DB_USER = os.environ.get("DB_USER")
+DB_PASS = os.environ.get("DB_PASS")
+DB_HOST = os.environ.get("DB_HOST")
+DB_PORT = os.environ.get("DB_PORT")
+DB_NAME = os.environ.get("DB_NAME")
 
-engine = create_engine(database_url, echo=False)
+if not all([DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME]):
+    raise Exception("One or more DB environment variables are missing")
+
+DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+
+# Create SQLAlchemy engine
+engine = create_engine(DATABASE_URL, echo=False)
 
 @app.route("/")
 def home():
