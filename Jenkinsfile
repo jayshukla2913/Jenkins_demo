@@ -5,7 +5,7 @@ pipeline {
         // Adjust these to match your Jenkins configuration / credentials IDs
         SONAR_SERVER_NAME = 'Jenkins_Master_SonarQube'
         SONAR_SCANNER_TOOL = 'Jenkins_Master_Scanner'
-        SONAR_TOKEN = credentials('SonarQube_master_token')
+        SONAR_TOKEN = credentials('Sonarqube_master_token')
 
         DOCKERHUB_USER = 'jayshukla2913'
         IMAGE_NAME = 'flask-mongo-app'
