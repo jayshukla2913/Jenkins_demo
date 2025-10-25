@@ -1,24 +1,45 @@
 pipeline {
     agent { label 'slave' }
+
+    environment {
+        IMAGE_NAME = "flask-app"                    // Docker image name
+        DOCKERHUB_CREDENTIALS = "dockerhub-creds"  // Jenkins Docker Hub credential ID
+        CONTAINER_NAME = "flask-app-container"
+    }
+
     stages {
-        stage('Docker Build') {
+        stage('Docker Build & Push') {
             steps {
-                sh 'docker build -t $IMAGE_NAME .'
+                echo "🐳 Building Docker image and pushing to Docker Hub..."
+                withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS}", usernameVariable: 'DH_USER', passwordVariable: 'DH_PASS')]) {
+                    sh """
+                        set -e
+                        echo "$DH_PASS" | docker login -u "$DH_USER" --password-stdin
+                        docker build -t $DH_USER/$IMAGE_NAME:latest .
+                        docker push $DH_USER/$IMAGE_NAME:latest
+                    """
+                }
             }
         }
-        stage('Docker Run') {
+
+        stage('Deploy') {
             steps {
-                sh '''
-                docker stop flask-app || true
-                docker rm flask-app || true
-                docker run -d --name flask-app -p 5000:5000 -e DATABASE_URL=postgresql://user:password@localhost:5432/mydb $IMAGE_NAME
-                '''
+                echo "🚀 Deploying the Docker container..."
+                sh """
+                    docker stop $CONTAINER_NAME || true
+                    docker rm $CONTAINER_NAME || true
+                    docker run -d --name $CONTAINER_NAME -p 5000:5000 \\
+                        -e DATABASE_URL=postgresql://user:password@localhost:5432/mydb \\
+                        $DH_USER/$IMAGE_NAME:latest
+                """
             }
         }
-        stage('Test') {
-            steps {
-                sh 'curl -f http://13.219.17.222:5000 || echo "App not responding yet"'
-            }
+    }
+
+    post {
+        always {
+            echo "🔹 Pipeline finished. Container status:"
+            sh 'docker ps -a | grep flask-app-container || echo "No container running"'
         }
     }
 }
