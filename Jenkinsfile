@@ -5,8 +5,8 @@ pipeline {
         IMAGE_NAME = "flask-app"
         CONTAINER_NAME = "flask-app-container"
         POSTGRES_CONTAINER = "flask-db-container"
-        DOCKERHUB_CREDENTIALS = "dockerhub-creds"
-        NETWORK_NAME = "myapp-network"
+        DOCKERHUB_CREDENTIALS = "Docker_Master_Credentials"
+        NETWORK_NAME = "docker-network"
         VOLUME_NAME = "pgdata"
     }
 
