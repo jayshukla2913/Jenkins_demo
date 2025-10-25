@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         // Adjust these to match your Jenkins configuration / credentials IDs
-        SONAR_SERVER_NAME = 'Jenkins_Master_SonarQube'
-        SONAR_SCANNER_TOOL = 'Jenkins_Master_Scanner'
+        SONAR_SERVER_NAME = 'Jenkins_Master_Sonarqube'
+        SONAR_SCANNER_TOOL = 'Sonar_Master_Scanner'
         SONAR_TOKEN = credentials('Sonarqube_master_token')
 
         DOCKERHUB_USER = 'jayshukla2913'
