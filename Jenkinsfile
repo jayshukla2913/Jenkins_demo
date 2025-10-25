@@ -81,7 +81,6 @@ pipeline {
             }
         }
 
-<<<<<<< HEAD
          stage('Quality Gate') {
              steps {
                 timeout(time: 15, unit: 'MINUTES') {
@@ -89,16 +88,15 @@ pipeline {
                  }
              }
          }
-=======
-        // Optional: uncomment to enforce quality gate
-        // stage('Quality Gate') {
-        //     steps {
-        //         timeout(time: 15, unit: 'MINUTES') {
-        //             waitForQualityGate abortPipeline: true
-        //         }
-        //     }
-        // }
->>>>>>> b535b30e3366ef084959ee3d464f75cde6ee8939
+        Optional: uncomment to enforce quality gate
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 15, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
 
         stage('Docker Build & Push') {
             steps {
