@@ -22,19 +22,19 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            steps {
-                echo "🚀 Deploying the Docker container..."
-                sh """
-                    docker stop $CONTAINER_NAME || true
-                    docker rm $CONTAINER_NAME || true
-                    docker run -d --name $CONTAINER_NAME -p 5000:5000 \\
-                        -e DATABASE_URL=postgresql://user:password@localhost:5432/mydb \\
-                        $DH_USER/$IMAGE_NAME:latest
-                """
-            }
+       stage('Deploy') {
+    steps {
+        withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS}", usernameVariable: 'DH_USER', passwordVariable: 'DH_PASS')]) {
+            sh """
+                docker stop $CONTAINER_NAME || true
+                docker rm $CONTAINER_NAME || true
+                docker run -d --name $CONTAINER_NAME -p 5000:5000 \\
+                    $DH_USER/$IMAGE_NAME:latest
+            """
         }
     }
+}
+
 
     post {
         always {
