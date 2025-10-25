@@ -1,11 +1,9 @@
 import os
-import pytest
-from app import app
 
-@pytest.fixture(scope="module", autouse=True)
-def set_test_env():
-    # Mock the DB URL so app doesn't fail to start
-    os.environ["DATABASE_URL"] = "sqlite:///:memory:"
+# ✅ Set the DATABASE_URL before importing app
+os.environ["DATABASE_URL"] = "sqlite:///:memory:"
+
+from app import app  # Now safe to import
 
 def test_home_route():
     client = app.test_client()
