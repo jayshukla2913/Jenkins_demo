@@ -41,7 +41,7 @@ pipeline {
 
                         # Run the new container
                         docker run -d --name $CONTAINER_NAME -p 5000:5000 \\
-                            -e DATABASE_URL=postgresql://user:password@localhost:5432/mydb \\
+                            -e DATABASE_URL=postgresql://user:password@98.90.57.144:5432/mydb \\
                             $DH_USER/$IMAGE_NAME:latest
                     """
                 }
