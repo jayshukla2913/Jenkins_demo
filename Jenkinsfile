@@ -88,14 +88,7 @@ pipeline {
                  }
              }
          }
-        Optional: uncomment to enforce quality gate
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 15, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
+    
 
 
         stage('Docker Build & Push') {
