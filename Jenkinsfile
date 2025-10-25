@@ -6,7 +6,7 @@ pipeline {
         CONTAINER_NAME = "flask-app-container"
         POSTGRES_CONTAINER = "flask-db-container"
         DOCKERHUB_CREDENTIALS = "Docker_Master_Credentials"
-        NETWORK_NAME = "docker-network"
+        NETWORK_NAME = "akash-jay"   // your existing network
         VOLUME_NAME = "pgdata"
     }
 
@@ -41,6 +41,8 @@ pipeline {
                 sh """
                     docker stop $POSTGRES_CONTAINER || true
                     docker rm $POSTGRES_CONTAINER || true
+
+                    # Run Postgres container with existing .env variables
                     docker run -d \
                         --name $POSTGRES_CONTAINER \
                         --network $NETWORK_NAME \
