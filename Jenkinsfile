@@ -3,15 +3,15 @@ pipeline {
 
     environment {
         // Adjust these to match your Jenkins configuration / credentials IDs
-        SONAR_SERVER_NAME = 'Jenkins_SonarQube'
-        SONAR_SCANNER_TOOL = 'Jenkins_Scanner'
-        SONAR_TOKEN = credentials('SonarQube_creds')
+        SONAR_SERVER_NAME = 'Jenkins_Master_SonarQube'
+        SONAR_SCANNER_TOOL = 'Jenkins_Master_Scanner'
+        SONAR_TOKEN = credentials('SonarQube_master_token')
 
         DOCKERHUB_USER = 'jayshukla2913'
         IMAGE_NAME = 'flask-mongo-app'
 
-        NEXUS_CREDENTIALS = 'nexus_credentials'
-        DOCKERHUB_CREDENTIALS = 'Jenkins_MongoDB'
+        NEXUS_CREDENTIALS = 'nexus_master_credentials'
+        DOCKERHUB_CREDENTIALS = 'Docker_Master_Credentials'
     }
 
     stages {
